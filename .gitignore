@@ -1,0 +1,30 @@
+# Rust build target
+/target
+
+# Reference clone repository
+/src-of-target-cli
+
+# Local Agent Workspace skills & state
+.agents/
+
+# Logs & temp files
+*.log
+*.tmp
+.env*
+
+# IDE & Editor artifacts
+.vscode/
+.idea/
+
+# OS & Editor specific files
+Thumbs.db
+.DS_Store
+*.swp
+*~
+*.bak
+*.rs.bk
+
+# Compiled binary output if placed outside target
+*.exe
+*.dll
+*.pdb
