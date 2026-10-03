@@ -58,6 +58,8 @@ pub struct DiffTrackApp {
     summary_search: String,
 }
 
+pub type AgentDiffTrackerApp = DiffTrackApp;
+
 const JETBRAINS_MONO_REGULAR: &[u8] = include_bytes!("../../assets/fonts/JetBrainsMono-Regular.ttf");
 const JETBRAINS_MONO_BOLD: &[u8] = include_bytes!("../../assets/fonts/JetBrainsMono-Bold.ttf");
 
@@ -237,7 +239,7 @@ impl eframe::App for DiffTrackApp {
                 ui.horizontal(|ui| {
                     // Logo + Brand Title
                     ui.label(RichText::new("⚡").size(16.0).color(theme.accent_blue));
-                    ui.heading(RichText::new("DiffTrack").strong().size(15.0).color(theme.text_primary));
+                    ui.heading(RichText::new("Agent Diff Tracker").strong().size(15.0).color(theme.text_primary));
                     ui.label(RichText::new("WORKBENCH").size(10.0).strong().color(theme.text_muted));
 
                     ui.add_space(8.0);

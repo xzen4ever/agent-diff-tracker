@@ -1,12 +1,12 @@
-# DiffTrack - LLM & Developer Maintenance Guide
+# Agent Diff Tracker - LLM & Developer Maintenance Guide
 
-> **Mục đích tài liệu**: Tài liệu này được thiết kế riêng cho các mô hình AI/LLM và lập trình viên kế thừa tiếp tục phát triển, bảo trì, hoặc mở rộng dự án `diff-track`. Tài liệu cung cấp toàn bộ bối cảnh kiến trúc, quy tắc phân tách module, định dạng dữ liệu của các công cụ AI, quy trình build, và hướng dẫn từng bước khi thêm tính năng mới.
+> **Mục đích tài liệu**: Tài liệu này được thiết kế riêng cho các mô hình AI/LLM và lập trình viên kế thừa tiếp tục phát triển, bảo trì, hoặc mở rộng dự án `agent-diff-tracker` (`diff-track`). Tài liệu cung cấp toàn bộ bối cảnh kiến trúc, quy tắc phân tách module, định dạng dữ liệu của các công cụ AI, quy trình build, và hướng dẫn từng bước khi thêm tính năng mới.
 
 ---
 
 ## 1. Tổng quan Dự án (Project Overview)
 
-* **Tên dự án**: `diff-track`
+* **Tên dự án**: **Agent Diff Tracker** (crate / CLI binary: `diff-track`)
 * **Ngôn ngữ**: Rust (2021 Edition, Toolchain `x86_64-pc-windows-gnu` trên Windows 10/11)
 * **Bản chất**: Ứng dụng độc lập (Standalone tool) quét, tổng hợp và hiển thị trực quan toàn bộ số dòng mã thay đổi (LOC: Lines of Code added/deleted/net) từ lịch sử phiên chat của các trợ lý AI lập trình:
   1. **Google Antigravity CLI** (`google-antigravity/antigravity-cli`)

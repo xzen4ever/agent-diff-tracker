@@ -268,7 +268,7 @@ mod tests {
     fn test_scanner_runs_without_panicking() {
         let scanner = Scanner::new();
         let (_sessions, stats) = scanner.scan_all(None);
-        println!("=== DIFF-TRACK SCANNER TEST RESULTS ===");
+        println!("=== AGENT DIFF TRACKER SCANNER TEST RESULTS ===");
         println!("Total Sessions Discovered: {}", stats.total_sessions);
         println!("Total Code Changes:        {}", stats.total_changes);
         println!("Total Lines Added (+):     {}", stats.total_lines_added);

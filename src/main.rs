@@ -5,7 +5,7 @@ mod scanner;
 mod ui;
 
 use eframe::egui;
-use ui::app::DiffTrackApp;
+use ui::app::AgentDiffTrackerApp;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let args: Vec<String> = std::env::args().collect();
@@ -21,7 +21,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Configure NativeOptions for standard Windowed mode
     let options = eframe::NativeOptions {
         viewport: egui::ViewportBuilder::default()
-            .with_title("DiffTrack - AI Code Change Workbench")
+            .with_title("Agent Diff Tracker - AI Code Change Workbench")
             .with_inner_size([1260.0, 800.0])
             .with_min_inner_size([960.0, 620.0])
             .with_resizable(true)
@@ -30,14 +30,14 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     };
 
     println!("============================================================");
-    println!("  DiffTrack - AI Code Change Workbench (Windowed Mode)");
+    println!("  Agent Diff Tracker - AI Code Change Workbench (Windowed Mode)");
     println!("  Scanning logs from Antigravity, Claude Code, Codex, Gemini");
     println!("============================================================");
 
     if let Err(e) = eframe::run_native(
-        "DiffTrack",
+        "Agent Diff Tracker",
         options,
-        Box::new(|cc| Ok(Box::new(DiffTrackApp::new(cc)))),
+        Box::new(|cc| Ok(Box::new(AgentDiffTrackerApp::new(cc)))),
     ) {
         eprintln!("Failed to launch GUI: {}", e);
     }

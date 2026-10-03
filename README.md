@@ -1,4 +1,4 @@
-# DiffTrack
+# Agent Diff Tracker
 
 [![CI](https://img.shields.io/github/actions/workflow/status/xzen4ever/agent-diff-tracker/rust.yml?branch=main&style=flat-square&logo=github&label=build)](https://github.com/xzen4ever/agent-diff-tracker/actions/workflows/rust.yml)
 [![Rust](https://img.shields.io/badge/rust-2021%20edition-orange?style=flat-square&logo=rust)](https://www.rust-lang.org/)
@@ -6,7 +6,7 @@
 [![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20Linux-lightgrey?style=flat-square)](https://github.com/xzen4ever/agent-diff-tracker)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
-DiffTrack là công cụ desktop và dòng lệnh viết bằng Rust, dùng để quét, phân tích và tổng hợp các thay đổi mã nguồn (Lines of Code: added/deleted/net) từ lịch sử phiên làm việc của các trợ lý AI lập trình: Google Antigravity CLI, Anthropic Claude Code, OpenAI Codex và Google Gemini CLI.
+**Agent Diff Tracker** là công cụ desktop và dòng lệnh viết bằng Rust, dùng để quét, phân tích và tổng hợp các thay đổi mã nguồn (Lines of Code: added/deleted/net) từ lịch sử phiên làm việc của các trợ lý AI lập trình: Google Antigravity CLI, Anthropic Claude Code, OpenAI Codex và Google Gemini CLI.
 
 Công cụ cung cấp hai giao diện sử dụng:
 - **Giao diện đồ họa (GUI)**: Dựng trên nền `eframe`/`egui`, hiển thị unified diff có đánh số dòng, tìm kiếm theo session/file và bảng thống kê tổng hợp.

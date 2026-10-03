@@ -131,7 +131,7 @@ pub fn run_cli(args: &[String]) -> Result<(), Box<dyn std::error::Error>> {
     // Run scanner (suppress banner when outputting pure json or simple mode)
     if !as_json && !is_simple {
         eprintln!(
-            "{}{}DiffTrack CLI{} - Scanning AI sessions (Antigravity, Claude, Codex, Gemini)...{}",
+            "{}{}Agent Diff Tracker CLI{} - Scanning AI sessions (Antigravity, Claude, Codex, Gemini)...{}",
             BOLD, CYAN, DIM, RESET
         );
     }
@@ -184,7 +184,7 @@ pub fn run_cli(args: &[String]) -> Result<(), Box<dyn std::error::Error>> {
 
 fn print_help() {
     println!(
-        r#"{bold}DiffTrack CLI - AI Code Change Aggregator{reset}
+        r#"{bold}Agent Diff Tracker CLI - AI Code Change Aggregator{reset}
 Summarize and inspect lines of code (LOC) changed across Antigravity, Claude Code, Codex, and Gemini CLI.
 
 {cyan}{bold}USAGE:{reset}
@@ -246,7 +246,7 @@ fn print_stats(stats: &ScanStats, is_simple: bool) {
     }
 
     println!("{bold}================================================================================{reset}", bold = BOLD, reset = RESET);
-    println!("  {bold}{cyan}DiffTrack AI LOC Dashboard{reset}", bold = BOLD, cyan = CYAN, reset = RESET);
+    println!("  {bold}{cyan}Agent Diff Tracker AI LOC Dashboard{reset}", bold = BOLD, cyan = CYAN, reset = RESET);
     println!("{bold}================================================================================{reset}", bold = BOLD, reset = RESET);
     println!(
         "  Total Sessions:   {bold}{:<8}{reset} | Total Code Changes: {bold}{:<8}{reset}",
