@@ -3,9 +3,21 @@ name: CI & Release
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - "src/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "assets/**"
+      - ".github/workflows/**"
     tags: [ "v*" ]
   pull_request:
     branches: [ "main" ]
+    paths:
+      - "src/**"
+      - "Cargo.toml"
+      - "Cargo.lock"
+      - "assets/**"
+      - ".github/workflows/**"
   workflow_dispatch:
     inputs:
       publish_release:
