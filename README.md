@@ -1,67 +1,67 @@
-# ⚡ DiffTrack
+# DiffTrack
 
-> Ứng dụng Rust độc lập quét, tổng hợp và hiển thị trực quan các dòng mã thay đổi (+/- LOC) từ lịch sử chat của các trợ lý AI: **Antigravity**, **Claude Code**, **OpenAI Codex**, và **Gemini CLI**.
+DiffTrack là công cụ desktop và dòng lệnh viết bằng Rust, dùng để quét, phân tích và tổng hợp các thay đổi mã nguồn (Lines of Code: added/deleted/net) từ lịch sử phiên làm việc của các trợ lý AI lập trình: Google Antigravity CLI, Anthropic Claude Code, OpenAI Codex và Google Gemini CLI.
 
-Hỗ trợ 2 chế độ song song: **Fullscreen GUI** (mượt mà 60 FPS, nhúng font JetBrains Mono hiển thị tiếng Việt hoàn hảo) và **Fast CLI** (hỗ trợ cờ `--simple` và `--json` cho script/CI).
+Công cụ cung cấp hai giao diện sử dụng:
+- **Giao diện đồ họa (GUI)**: Dựng trên nền `eframe`/`egui`, hiển thị unified diff có đánh số dòng, tìm kiếm theo session/file và bảng thống kê tổng hợp.
+- **Giao diện dòng lệnh (CLI)**: Phục vụ truy vấn nhanh trên terminal hoặc tích hợp kịch bản tự động hóa (hỗ trợ cờ `--simple` và `--json`).
 
 ---
 
-## 🚀 Cài đặt & Khởi chạy
+## Cài đặt & Build
 
-Yêu cầu: [Rust Toolchain](https://www.rust-lang.org/) (cargo).
+Yêu cầu: Rust toolchain (cargo).
 
 ```powershell
-# 1. Chạy ngay chế độ Debug
+# Chạy trực tiếp chế độ phát triển
 cargo run
 
-# 2. Build bản Release tối ưu (target/release/diff-track.exe ~13.7 MB)
+# Build bản Release (file thực thi tại target/release/diff-track.exe)
 cargo build --release
-
-# 3. Khởi chạy trực tiếp file build
-.\target\release\diff-track.exe
 ```
 
 ---
 
-## ✨ Tính năng chính
+## Tính năng
 
-- **Đa nền tảng AI**: Tự động phát hiện session logs từ Antigravity, Claude Code, Codex, Gemini CLI hoặc thư mục bất kỳ.
-- **Tính toán LOC chuẩn xác**: Bóc tách chính xác các thao tác tạo file, sửa file (`replace_file_content`, `Edit`) và Unified Diff.
-- **Fullscreen GUI (F11)**: Xem diff tô màu thời gian thực, bảng metrics, tìm kiếm và lọc theo agent/prompt/file.
-- **Giao diện CLI mạnh mẽ**: Bảng màu ANSI, xuất JSON, xem diff trực tiếp trên terminal.
-- **Font tiếng Việt nhúng sẵn**: Tích hợp JetBrains Mono, hiển thị chuẩn xác 100% không cần cài font ngoài.
+- **Quét đa nguồn**: Tự động nhận diện nhật ký phiên từ Antigravity (`brain/*.jsonl`), Claude Code (`projects/`, `sessions/`), Codex (`rollout-*.jsonl`), Gemini CLI (`tmp/*/chats/`), hoặc thư mục tùy chỉnh do người dùng chỉ định.
+- **Phân tích thay đổi mã nguồn**: Trích xuất các thao tác tạo file mới (`write_to_file`, `Write`), sửa đổi nội dung (`replace_file_content`, `Edit`) và Unified Diff.
+- **Giao diện đồ họa (GUI)**:
+  - Phím tắt `F11`: Bật/tắt chế độ toàn màn hình.
+  - Phím tắt `F5`: Quét lại dữ liệu trong nền.
+  - Nhúng trực tiếp font JetBrains Mono, hỗ trợ hiển thị đầy đủ bộ ký tự tiếng Việt và ký hiệu lập trình.
+- **Giao diện dòng lệnh (CLI)**: Xuất dữ liệu thống kê dạng bảng terminal, định dạng thô tối giản (`--simple`), hoặc định dạng JSON (`--json`).
 
 ---
 
-## 💻 Lệnh CLI thông dụng
+## Cú pháp dòng lệnh (CLI)
 
-| Lệnh | Mô tả |
+```text
+diff-track.exe [COMMAND] [OPTIONS]
+```
+
+| Lệnh | Chức năng |
 | :--- | :--- |
-| `.\diff-track.exe` | Mở giao diện Fullscreen GUI (mặc định) |
-| `.\diff-track.exe stats` | Dashboard thống kê tổng quan (sessions, LOC +/-, files) |
-| `.\diff-track.exe summary [-n 10]` | Top file có nhiều dòng code biến động nhất |
-| `.\diff-track.exe sessions [-t <tool>] [-q <query>]` | Danh sách session chat, hỗ trợ lọc theo tool và từ khóa |
-| `.\diff-track.exe agents` (hoặc `by-agent`) | Thống kê và gom nhóm session theo từng Agent |
-| `.\diff-track.exe diff <SESSION_ID>` | Xem Unified Diff chi tiết có tô màu của một session |
+| `diff-track.exe` | Khởi chạy giao diện đồ họa (mặc định nếu không truyền tham số) |
+| `diff-track.exe stats` | Hiển thị bảng tổng hợp: tổng session, file thay đổi, số dòng thêm/xóa |
+| `diff-track.exe summary [-n <N>]` | Liệt kê các file có khối lượng thay đổi dòng code lớn nhất |
+| `diff-track.exe sessions [-t <TOOL>] [-q <QUERY>]` | Liệt kê danh sách phiên làm việc, hỗ trợ lọc theo công cụ hoặc từ khóa |
+| `diff-track.exe agents` | Thống kê số lượng phiên và dòng mã thay đổi theo từng trợ lý AI |
+| `diff-track.exe diff <SESSION_ID>` | In chi tiết Unified Diff của một phiên làm việc cụ thể |
 
-> **Mẹo CLI**: Thêm cờ `--simple` (hoặc `-s`) để lấy dữ liệu 1 dòng không viền cho shell script, hoặc `--json` để xuất dữ liệu JSON.
-
----
-
-## ⌨️ Phím tắt GUI
-
-- **`F11`**: Bật / tắt chế độ toàn màn hình (Fullscreen).
-- **`F5`**: Quét lại toàn bộ logs trong nền (không đơ UI).
+### Tùy chọn định dạng đầu ra
+- `--simple` hoặc `-s`: In kết quả dạng text rút gọn không viền bảng, phù hợp cho xử lý qua script.
+- `--json`: Xuất toàn bộ dữ liệu cấu trúc dưới dạng JSON.
 
 ---
 
-## 📖 Tài liệu kỹ thuật
+## Tài liệu kỹ thuật
 
-Chi tiết kiến trúc module, parser logs từng AI và quy chuẩn tính toán: xem [LLM.md](LLM.md).
+Chi tiết về cấu trúc dữ liệu, định dạng file log của từng trợ lý AI và kiến trúc hệ thống được ghi nhận tại [LLM.md](LLM.md).
 
 ---
 
-## 📄 License
+## Giấy phép
 
 - Mã nguồn: [MIT](LICENSE)
 - Font JetBrains Mono: [SIL Open Font License 1.1](assets/fonts/OFL.txt)
