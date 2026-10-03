@@ -109,17 +109,17 @@ DiffTrack áp dụng các quy chuẩn bóc tách và tính toán dòng mã thay 
 ### 1. Thao tác Tạo mới / Ghi đè file (`write_to_file` / `Write`)
 * **Bản chất**: AI cung cấp toàn bộ nội dung của tệp tin đích (`CodeContent` hoặc `content`).
 * **Phương pháp tính**:
-  $$\text{lines\_added} = \text{count}(\text{lines in content})$$
-  $$\text{lines\_deleted} = 0$$
-  $$\text{change\_type} = \text{ChangeType::Create}$$
+  * `lines_added = count(lines in content)`
+  * `lines_deleted = 0`
+  * `change_type = ChangeType::Create`
 * **Cấu trúc Diff**: Sinh ra hunk header `@@ +1,N @@` và toàn bộ các dòng được đánh dấu dấu cộng `+` kèm số dòng mới từ `1` đến `N`.
 
 ### 2. Thao tác Thay thế nội dung (`replace_file_content` / `Edit`)
 * **Bản chất**: AI chỉ định khối code cũ cần bỏ (`TargetContent`) và khối code mới thay vào (`ReplacementContent`) tại vị trí `StartLine` đến `EndLine`.
 * **Phương pháp tính**:
-  $$\text{lines\_deleted} = \text{count}(\text{lines in TargetContent})$$
-  $$\text{lines\_added} = \text{count}(\text{lines in ReplacementContent})$$
-  $$\text{change\_type} = \text{ChangeType::Modify}$$
+  * `lines_deleted = count(lines in TargetContent)`
+  * `lines_added = count(lines in ReplacementContent)`
+  * `change_type = ChangeType::Modify`
 * **Cấu trúc Diff**: 
   * Header: `@@ -StartLine,lines_deleted +StartLine,lines_added @@ (Description)`
   * Các dòng trong `TargetContent` được gán tiền tố `-` kèm số dòng gốc `StartLine + i`.
@@ -127,8 +127,8 @@ DiffTrack áp dụng các quy chuẩn bóc tách và tính toán dòng mã thay 
 
 ### 3. Thao tác Unified Diff (`diff --git`, `.patch`)
 * Quét từng dòng của đoạn văn bản:
-  * Bắt đầu bằng `+` (loại trừ `+++`): tăng $\text{lines\_added}$, gán `DiffLineType::Added`.
-  * Bắt đầu bằng `-` (loại trừ `---`): tăng $\text{lines\_deleted}$, gán `DiffLineType::Removed`.
+  * Bắt đầu bằng `+` (loại trừ `+++`): tăng `lines_added`, gán `DiffLineType::Added`.
+  * Bắt đầu bằng `-` (loại trừ `---`): tăng `lines_deleted`, gán `DiffLineType::Removed`.
   * Bắt đầu bằng dấu cách ` `: dòng ngữ cảnh (Context), tăng đồng thời con trỏ dòng cũ và mới.
 
 ### 4. Thuật toán Tổng hợp & Ổn định hiển thị (Flicker-Free Aggregation)
@@ -136,8 +136,8 @@ DiffTrack áp dụng các quy chuẩn bóc tách và tính toán dòng mã thay 
   1. **Không tính toán lại trong hàm vẽ**: Dữ liệu tổng hợp được tính toán sẵn một lần vào `summary_files` khi khởi động hoặc sau khi luồng quét nền trả kết quả.
   2. **Gom nhóm bằng `BTreeMap`**: Đảm bảo thứ tự key luôn cố định, không bị phụ thuộc vào seed hash ngẫu nhiên như `HashMap`.
   3. **Sắp xếp ổn định (Stable Sort với Tie-Breaker)**:
-     $$\text{Priority 1: } (\text{lines\_added} + \text{lines\_deleted}) \quad \text{[Giảm dần]}$$
-     $$\text{Priority 2: } \text{file\_path} \quad \text{[Tăng dần theo bảng chữ cái]}$$
+     * **Ưu tiên 1**: `lines_added + lines_deleted` (giảm dần theo tổng biến động LOC).
+     * **Ưu tiên 2**: `file_path` (tăng dần theo thứ tự bảng chữ cái để chống nhảy thứ tự hàng).
   4. **Dựng hình bằng `egui::Grid`**: Các cột có chiều rộng cố định, không dùng `right_to_left` lồng nhau để loại bỏ hoàn toàn việc dao động sub-pixel làm vỡ dòng.
 
 ---
