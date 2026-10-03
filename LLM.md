@@ -209,7 +209,7 @@ pub struct FileSummary {
    * Bóc tách các thao tác thêm/xóa dòng thành `Vec<DiffLine>` và `CodeChange`.
 3. **Đăng ký module và đường dẫn trong [`src/scanner/mod.rs`](src/scanner/mod.rs)**:
    * `pub mod <tool_name>;`
-   * Bổ sung hàm `scan_<tool_name>(&self) -> Vec<ChatSession>` với danh sách các thư mục chứa log trên Windows/macOS/Linux.
+   * Bổ sung hàm `scan_<tool_name>(&self) -> Vec<ChatSession>` với danh sách các thư mục chứa log trên Windows/Linux.
    * Gọi hàm này trong `scan_all()`.
 4. **Cập nhật [`src/aggregator.rs`](src/aggregator.rs)**:
    * Đếm số lượng phiên của công cụ trong `compute_stats()`.

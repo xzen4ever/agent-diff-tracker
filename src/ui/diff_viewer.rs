@@ -86,11 +86,7 @@ impl DiffViewer {
                                     {
                                         let _ = std::process::Command::new("explorer").arg(parent).spawn();
                                     }
-                                    #[cfg(target_os = "macos")]
-                                    {
-                                        let _ = std::process::Command::new("open").arg(parent).spawn();
-                                    }
-                                    #[cfg(all(not(target_os = "windows"), not(target_os = "macos")))]
+                                    #[cfg(not(target_os = "windows"))]
                                     {
                                         let _ = std::process::Command::new("xdg-open").arg(parent).spawn();
                                     }

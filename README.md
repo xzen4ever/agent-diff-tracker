@@ -37,7 +37,7 @@ Trong quá trình lập trình cùng các trợ lý AI (AI Coding Assistants), r
   * **OpenAI Codex / Copilot CLI**: Quét lịch sử command và logs (`~/.copilot/logs/`, `~/.codex/`).
   * **Gemini CLI**: Quét lịch sử lệnh và transcript (`~/.gemini/gemini-cli/`, `~/.gemini/history/`).
   * **Custom Folder Scanner**: Quét bất kỳ thư mục nào trên máy tính do người dùng chỉ định.
-* 🇻🇳 **Hỗ trợ Unicode & Tiếng Việt 100%**: Nhúng trực tiếp bộ font cao cấp **JetBrains Mono** (`JetBrainsMono-Regular`, `JetBrainsMono-Bold`) vào file thực thi, đồng nhất hiển thị trên cả Windows, Ubuntu và macOS mà không cần cài font ngoài, giải mã chuỗi `\uXXXX`, không bao giờ bị lỗi font ô vuông ("tofu").
+* 🇻🇳 **Hỗ trợ Unicode & Tiếng Việt 100%**: Nhúng trực tiếp bộ font cao cấp **JetBrains Mono** (`JetBrainsMono-Regular`, `JetBrainsMono-Bold`) vào file thực thi, đồng nhất hiển thị trên cả Windows và Linux (Ubuntu, Debian...) mà không cần cài font ngoài, giải mã chuỗi `\uXXXX`, không bao giờ bị lỗi font ô vuông ("tofu").
 * 📊 **Dashboard số liệu & Bảng tổng hợp không nhấp nháy**:
   * Thống kê: Tổng session, tổng thay đổi, tổng số dòng thêm (`+`), xóa (`-`), số file độc nhất bị sửa đổi.
   * Tab **Summary**: Gom nhóm theo file, sắp xếp ổn định tuyệt đối (Deterministic Sorting), hiển thị dạng lưới `egui::Grid` có sọc ngang rõ ràng.
@@ -156,7 +156,7 @@ DiffTrack áp dụng các quy chuẩn bóc tách và tính toán dòng mã thay 
 ## 🚀 Hướng dẫn cài đặt & Khởi chạy
 
 ### Yêu cầu hệ thống
-* Hệ điều hành: Windows 10/11 (64-bit).
+* Hệ điều hành: Windows 10/11 (64-bit) hoặc Linux (Ubuntu, Debian, Fedora...).
 * Rust Toolchain đã được cài đặt (`cargo` và `rustc` trong PATH).
 
 ### 1. Khởi chạy trực tiếp bản Release đã build sẵn
@@ -274,7 +274,7 @@ Bên cạnh giao diện đồ họa toàn màn hình, DiffTrack cung cấp giao 
 * **Khắc phục**: Shim `dlltool.exe` có thể đặt tại `%USERPROFILE%\.cargo\bin\dlltool.exe` (Windows) hoặc `~/.cargo/bin/dlltool.exe`. Đảm bảo biến môi trường `PATH` của người dùng chứa đường dẫn này.
 
 ### 2. Ký tự tiếng Việt hiển thị thành ô vuông ("tofu")
-* **Khắc phục**: Ứng dụng đã nhúng trực tiếp bộ font **JetBrains Mono** vào file thực thi nên không phụ thuộc vào font cài sẵn của hệ điều hành. Dù chạy trên Windows, Ubuntu hay macOS, toàn bộ ký tự tiếng Việt và ký hiệu lập trình đều hiển thị chuẩn xác 100%.
+* **Khắc phục**: Ứng dụng đã nhúng trực tiếp bộ font **JetBrains Mono** vào file thực thi nên không phụ thuộc vào font cài sẵn của hệ điều hành. Dù chạy trên Windows hay Linux (Ubuntu, Debian...), toàn bộ ký tự tiếng Việt và ký hiệu lập trình đều hiển thị chuẩn xác 100%.
 
 ### 3. Cửa sổ mở lên bị đen màn hình
 * **Khắc phục**: DiffTrack sử dụng backend OpenGL (`glow`). Hãy đảm bảo driver đồ họa (GPU Driver) trên máy tính hỗ trợ OpenGL 2.1 trở lên.
