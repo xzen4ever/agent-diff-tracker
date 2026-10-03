@@ -15,8 +15,8 @@
   4. **Google Gemini CLI** (`google-gemini/gemini-cli`)
   5. Các tệp nhật ký chứa Unified Diff tiêu chuẩn (`.diff`, `.patch`, git diff).
 * **Hai chế độ vận hành song song**:
-  * **Fullscreen GUI**: Giao diện Immediate Mode GUI đồ họa mượt mà (60 FPS qua `eframe` / `egui 0.29`), hỗ trợ font Unicode tiếng Việt không lỗi tofu, tìm kiếm thời gian thực, xem diff tô màu trực quan.
-  * **CLI Mode**: Giao diện dòng lệnh trong terminal với các cờ lệnh (`stats`, `summary`, `sessions`, `diff`, `scan`), hỗ trợ xuất JSON (`--json`) và cờ siêu tinh gọn (`--simple` / `-s`).
+  * **Windowed / Fullscreen GUI**: Giao diện Immediate Mode GUI đồ họa mượt mà (60 FPS qua `eframe` / `egui 0.29`), hỗ trợ Theme Light/Dark, điều hướng phân cấp Progressive Flow (Agent Overview ➔ Sessions Timeline ➔ Session Detail & Diff Viewer), font JetBrains Mono nhúng sẵn hiển thị tiếng Việt hoàn hảo.
+  * **CLI Mode**: Giao diện dòng lệnh trong terminal với các lệnh (`stats`, `summary`, `sessions`, `agents`, `diff`, `scan`), hỗ trợ xuất JSON (`--json`) và cờ siêu tinh gọn (`--simple` / `-s`).
 
 ---
 
@@ -31,46 +31,50 @@ Dự án áp dụng mô hình phân tách trách nhiệm nghiêm ngặt (Strict 
                └───────────┬────────────────────────────────┬───────────┘
                            │ (Nếu không có tham số / --gui) │ (Nếu có cờ CLI / lệnh)
                            ▼                                ▼
-               ┌───────────────────────┐        ┌───────────────────────┐
-               │       src/ui/         │        │       src/cli/        │
-               │   (Fullscreen GUI)    │        │  (Terminal Interface) │
-               │ • app.rs (State/Font) │        │ • mod.rs              │
-               │ • sidebar.rs          │        │ • Dashboard, Tables   │
-               │ • diff_viewer.rs      │        │ • --simple / --json   │
-               └───────────┬───────────┘        └───────────┬───────────┘
-                           │                                │
-                           └────────────────┬───────────────┘
-                                            │ Dùng chung dữ liệu tổng hợp
-                                            ▼
-                           ┌─────────────────────────────────┐
-                           │        src/aggregator.rs        │
-                           │  (Business Logic & Analytics)   │
-                           │ • compute_stats()               │
-                           │ • compute_file_summaries()      │
-                           │ • group_sessions_by_agent()     │
-                           │ • filter_sessions()             │
-                           │ • find_session()                │
-                           └────────────────┬────────────────┘
-                                            │ Nhận danh sách ChatSession
-                                            ▼
-                           ┌─────────────────────────────────┐
-                           │        src/scanner/             │
-                           │  (Discovery & Tool Parsers)     │
-                           │ • mod.rs (Coordinator)          │
-                           │ • antigravity.rs                │
-                           │ • claude.rs                     │
-                           │ • codex.rs                      │
-                           │ • gemini.rs                     │
-                           │ • generic_diff.rs               │
-                           └────────────────┬────────────────┘
-                                            │ Tuân theo Data Models
-                                            ▼
-                           ┌─────────────────────────────────┐
-                           │         src/models.rs           │
-                           │   (Core Data Structures)        │
-                           │ ToolType, CodeChange, DiffLine, │
-                           │ ChatSession, FileSummary, Stats │
-                           └─────────────────────────────────┘
+               ┌──────────────────────────────────────────────┐ ┌───────────────────────┐
+               │                   src/ui/                    │ │       src/cli/        │
+               │        (Windowed / Fullscreen GUI)           │ │  (Terminal Interface) │
+               │ • app.rs (State, Router, Font, Theme Toggle) │ │ • mod.rs              │
+               │ • agent_overview.rs (Level 1: Macro Cards)   │ │ • Dashboard, Tables   │
+               │ • session_timeline.rs (Level 2: Timeline)    │ │ • --simple / --json   │
+               │ • session_detail.rs (Level 3: Session & Diff)│ └───────────┬───────────┘
+               │ • diff_viewer.rs (Unified Diff Canvas)       │             │
+               │ • theme.rs (Light / Dark Palette Tokens)     │             │
+               └───────────────────────┬──────────────────────┘             │
+                                       │                                    │
+                                       └────────────────┬───────────────────┘
+                                                        │ Dùng chung dữ liệu tổng hợp
+                                                        ▼
+                                       ┌─────────────────────────────────┐
+                                       │        src/aggregator.rs        │
+                                       │  (Business Logic & Analytics)   │
+                                       │ • compute_stats()               │
+                                       │ • compute_file_summaries()      │
+                                       │ • group_sessions_by_agent()     │
+                                       │ • filter_sessions()             │
+                                       │ • find_session()                │
+                                       └────────────────┬────────────────┘
+                                                        │ Nhận danh sách ChatSession
+                                                        ▼
+                                       ┌─────────────────────────────────┐
+                                       │        src/scanner/             │
+                                       │  (Discovery & Tool Parsers)     │
+                                       │ • mod.rs (Coordinator)          │
+                                       │ • antigravity.rs                │
+                                       │ • claude.rs                     │
+                                       │ • codex.rs                      │
+                                       │ • gemini.rs                     │
+                                       │ • generic_diff.rs               │
+                                       └────────────────┬────────────────┘
+                                                        │ Tuân theo Data Models
+                                                        ▼
+                                       ┌─────────────────────────────────┐
+                                       │         src/models.rs           │
+                                       │   (Core Data Structures)        │
+                                       │ ToolType, CodeChange, DiffLine, │
+                                       │ DiffLineType, ChatSession,      │
+                                       │ FileSummary, ScanStats          │
+                                       └─────────────────────────────────┘
 ```
 
 ### Quy tắc bất di bất dịch (Architectural Invariants):
@@ -194,6 +198,19 @@ pub struct FileSummary {
     pub lines_deleted: usize,
     pub change_count: usize,
 }
+
+// Thống kê quét tổng thể
+pub struct ScanStats {
+    pub total_sessions: usize,
+    pub total_changes: usize,
+    pub total_lines_added: usize,
+    pub total_lines_deleted: usize,
+    pub unique_files: usize,
+    pub count_antigravity: usize,
+    pub count_claude: usize,
+    pub count_codex: usize,
+    pub count_gemini: usize,
+}
 ```
 
 ---
@@ -202,20 +219,23 @@ pub struct FileSummary {
 
 ### Trường hợp 1: Thêm một Công cụ AI mới (Ví dụ: `Cursor`, `Aider`, `Continue`)
 1. **Thêm biến thể vào enum [`ToolType`](src/models.rs)**:
-   * Thêm `Cursor` vào enum `ToolType`.
-   * Cập nhật `display_name()`, `badge_short()`, `color_rgba()` trong `impl ToolType`.
+   * Thêm biến thể mới vào enum `ToolType`.
+   * Cập nhật `display_name()`, `badge_short()`, `color_rgba()`, `color_for_mode()`, `description()`, `icon()` trong `impl ToolType`.
 2. **Tạo parser mới tại `src/scanner/<tool_name>.rs`**:
    * Viết hàm `pub fn parse_<tool>_log(path: &Path, session_id: &str) -> Option<ChatSession>`.
    * Bóc tách các thao tác thêm/xóa dòng thành `Vec<DiffLine>` và `CodeChange`.
 3. **Đăng ký module và đường dẫn trong [`src/scanner/mod.rs`](src/scanner/mod.rs)**:
    * `pub mod <tool_name>;`
+   * Bổ sung nhận diện cài đặt trong `Scanner::is_agent_installed()`.
    * Bổ sung hàm `scan_<tool_name>(&self) -> Vec<ChatSession>` với danh sách các thư mục chứa log trên Windows/Linux.
    * Gọi hàm này trong `scan_all()`.
 4. **Cập nhật [`src/aggregator.rs`](src/aggregator.rs)**:
-   * Đếm số lượng phiên của công cụ trong `compute_stats()`.
+   * Đếm số lượng phiên của công cụ mới trong `compute_stats()`.
+   * Thêm biến thể vào mảng `supported_tools` trong hàm `group_sessions_by_agent()`.
 5. **Cập nhật UI & CLI**:
-   * Trong [`src/ui/sidebar.rs`](src/ui/sidebar.rs): Thêm công cụ vào danh sách nút lọc `tools = [...]`.
-   * Trong [`src/cli/mod.rs`](src/cli/mod.rs): Thêm nhãn nhận diện cho cờ `--tool <name>` và in badge màu.
+   * Trong [`src/ui/agent_overview.rs`](src/ui/agent_overview.rs): Thêm công cụ vào danh sách `candidate_tools` trong hàm `show()` để hiển thị Macro Card.
+   * Trong [`src/ui/app.rs`](src/ui/app.rs): Bổ sung `tool_pill()` trong ngăn kéo Custom Scan nếu muốn hiển thị số lượng phát hiện nhanh.
+   * Trong [`src/cli/mod.rs`](src/cli/mod.rs): Thêm nhãn nhận diện cho cờ `--tool <name>` / `-t`, cập nhật hàm `tool_ansi_info()` để hiển thị màu và nhãn badge terminal.
 
 ### Trường hợp 2: Thay đổi Phương pháp Tính toán / Sắp xếp
 * Chỉ sửa tại [`src/aggregator.rs`](src/aggregator.rs):
@@ -239,9 +259,11 @@ pub struct FileSummary {
 * Khi clone các repository Node.js/TypeScript monorepo lớn (như `claude-code`, `gemini-cli`), Windows có thể bị lỗi đường dẫn vượt quá 260 ký tự (`Filename too long`).
 * Luôn kích hoạt: `git config --global core.longpaths true`.
 
-### ⚠️ Font chữ Unicode tiếng Việt trên giao diện GUI
-* `egui` mặc định **không** có glyph tiếng Việt.
-* Hàm `setup_custom_fonts()` trong [`src/ui/app.rs`](src/ui/app.rs) tự động nạp font `C:\Windows\Fonts\segoeui.ttf` và `consola.ttf`. Khi mở rộng hoặc thay đổi theme font, phải luôn duy trì `segoeui.ttf` hoặc một font Unicode hoàn chỉnh để không gây lỗi tofu (`□`).
+### ⚠️ Font chữ Unicode tiếng Việt & Monospace trên GUI
+* `egui` mặc định **không** có glyph tiếng Việt và font lập trình chuyên dụng.
+* Hàm `setup_custom_fonts()` trong [`src/ui/app.rs`](src/ui/app.rs) thực hiện 2 cơ chế:
+  1. **Nhúng trực tiếp font JetBrains Mono**: Nhúng tĩnh file font `assets/fonts/JetBrainsMono-Regular.ttf` và `JetBrainsMono-Bold.ttf` vào binary thông qua macro `include_bytes!`, ưu tiên cho cả `Monospace` và `Proportional`.
+  2. **Nạp dự phòng font hệ thống (Fallback)**: Tự động nạp thêm font hệ thống Windows (`segoeui.ttf`, `arial.ttf`) hoặc Linux (`DejaVuSans.ttf`, `Ubuntu-R.ttf`, `LiberationSans-Regular.ttf`) để đảm bảo không bao giờ bị lỗi ô vuông tofu (`□`) với bất kỳ ký tự đặc biệt nào.
 
 ---
 

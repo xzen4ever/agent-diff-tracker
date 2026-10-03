@@ -27,9 +27,11 @@ cargo build --release
 - **Quét đa nguồn**: Tự động nhận diện nhật ký phiên từ Antigravity (`brain/*.jsonl`), Claude Code (`projects/`, `sessions/`), Codex (`rollout-*.jsonl`), Gemini CLI (`tmp/*/chats/`), hoặc thư mục tùy chỉnh do người dùng chỉ định.
 - **Phân tích thay đổi mã nguồn**: Trích xuất các thao tác tạo file mới (`write_to_file`, `Write`), sửa đổi nội dung (`replace_file_content`, `Edit`) và Unified Diff.
 - **Giao diện đồ họa (GUI)**:
-  - Phím tắt `F11`: Bật/tắt chế độ toàn màn hình.
+  - Khởi chạy mặc định dạng cửa sổ (1260x800), phím tắt `F11` chuyển đổi toàn màn hình.
+  - Điều hướng phân cấp 3 cấp độ (Progressive Zoom): Tổng quan Agent ➔ Danh sách Session ➔ Chi tiết Diff.
+  - Hỗ trợ chuyển đổi giao diện Sáng / Tối (Theme Light/Dark), phím tắt `Esc` để lùi cấp điều hướng.
   - Phím tắt `F5`: Quét lại dữ liệu trong nền.
-  - Nhúng trực tiếp font JetBrains Mono, hỗ trợ hiển thị đầy đủ bộ ký tự tiếng Việt và ký hiệu lập trình.
+  - Nhúng trực tiếp font JetBrains Mono (SIL OFL 1.1), hỗ trợ hiển thị đầy đủ bộ ký tự tiếng Việt và ký hiệu lập trình.
 - **Giao diện dòng lệnh (CLI)**: Xuất dữ liệu thống kê dạng bảng terminal, định dạng thô tối giản (`--simple`), hoặc định dạng JSON (`--json`).
 
 ---
@@ -48,10 +50,16 @@ diff-track.exe [COMMAND] [OPTIONS]
 | `diff-track.exe sessions [-t <TOOL>] [-q <QUERY>]` | Liệt kê danh sách phiên làm việc, hỗ trợ lọc theo công cụ hoặc từ khóa |
 | `diff-track.exe agents` | Thống kê số lượng phiên và dòng mã thay đổi theo từng trợ lý AI |
 | `diff-track.exe diff <SESSION_ID>` | In chi tiết Unified Diff của một phiên làm việc cụ thể |
+| `diff-track.exe scan <PATH>` | Quét thư mục tùy chỉnh chứa nhật ký hoặc patch diff |
 
-### Tùy chọn định dạng đầu ra
+### Tùy chọn dòng lệnh
 - `--simple` hoặc `-s`: In kết quả dạng text rút gọn không viền bảng, phù hợp cho xử lý qua script.
-- `--json`: Xuất toàn bộ dữ liệu cấu trúc dưới dạng JSON.
+- `--json` hoặc `-j`: Xuất toàn bộ dữ liệu cấu trúc dưới dạng JSON.
+- `--tool` hoặc `-t <NAME>`: Lọc theo công cụ (`antigravity`, `claude`, `codex`, `gemini`, `generic`).
+- `--query` hoặc `-q <TEXT>`: Tìm kiếm theo từ khóa session, prompt, hoặc đường dẫn file.
+- `--limit` hoặc `-n <NUM>`: Giới hạn số dòng hiển thị (mặc định: 30).
+- `--by-agent` hoặc `-b`: Nhóm danh sách session theo từng Agent.
+- `--gui` hoặc `-g`: Chỉ định khởi chạy giao diện đồ họa.
 
 ---
 
