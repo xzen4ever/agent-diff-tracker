@@ -102,14 +102,21 @@ Khi cập nhật hoặc gỡ lỗi đường dẫn quét, hãy đối chiếu v�
 
 ### B. Anthropic Claude Code
 * **Vị trí lưu trữ**:
-  * `~/.claude/projects/` (lưu phiên làm việc theo từng dự án).
-  * `~/.claude/sessions/` và `~/.claude/history/`.
-  * Thư mục biến môi trường: `$CLAUDE_CONFIG_DIR`.
-  * Trên Windows: `%APPDATA%\Claude`, `%LOCALAPPDATA%\Claude`, `%APPDATA%\claude-code`.
-* **Cấu trúc JSON / JSONL**:
-  * Các khối `tool_use` có `name == "Edit"` hoặc `"Replace"` (chứa `file_path`, `old_string`, `new_string`).
-  * Khối `tool_use` có `name == "Write"` hoặc `"write_file"` (chứa `file_path`, `content`).
-  * Bóc tách Unified Diff khi có thao tác bash/git.
+  * Windows: `%USERPROFILE%\.claude\projects\<encoded-project-path>\<session-uuid>.jsonl`
+  * macOS / Linux: `~/.claude/projects/<encoded-project-path>/<session-uuid>.jsonl`
+  * Dự phòng & cấu hình: `~/.config/claude/projects/`, `~/.claude/sessions/`, `~/.claude/history/`, `%APPDATA%\Claude`, `%LOCALAPPDATA%\Claude`, `%APPDATA%\claude-code`.
+  * Biến môi trường: `$CLAUDE_CONFIG_DIR`, `$CLAUDE_HOME`, `$CLAUDE_PROJECTS_DIR`.
+* **Cấu trúc JSONL & Sự kiện (Events)**:
+  * Mỗi dòng là 1 JSON event append-only: `type` (`"user"`, `"assistant"`, `"system"`), `sessionId`, `timestamp`, `cwd`.
+  * **User Prompt (`type == "user"`)**:
+    * `message.content` có thể là chuỗi plain text hoặc mảng blocks `[{"type": "text", "text": "..."}]`.
+  * **Assistant Tool Calls (`type == "assistant"`)**:
+    * Nằm trong mảng `message.content` chứa các phần tử có `type == "tool_use"`.
+    * **Sửa đổi file**: `name` là `"Edit"`, `"FileEditTool"`, `"str_replace_editor"`, `"str_replace"`, `"replace"` -> tham số `file_path`/`path`, `old_string`/`old_str`, `new_string`/`new_str`. Nếu `command == "create"` -> chuyển thành tạo file.
+    * **Tạo/Ghi file**: `name` là `"Write"`, `"FileWriteTool"`, `"write_file"`, `"create_file"` -> tham số `file_path`/`path`, `content`/`file_text`.
+    * **Sửa nhiều chỗ (Batch/MultiEdit)**: `name == "MultiEdit"` -> mảng `edits: [{"old_string": "...", "new_string": "..."}]`.
+    * **Notebook / Jupyter**: `name` là `"NotebookEdit"`, `"NotebookEditCell"` -> tham số `notebook_path`, `new_source`.
+    * **Patch / Unified Diff**: `name` là `"patch"`, `"apply_patch"` hoặc các dòng diff text thuần.
 
 ### C. OpenAI Codex (`codex-rs`)
 * **Vị trí lưu trữ**:

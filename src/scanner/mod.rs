@@ -134,6 +134,10 @@ impl Scanner {
             self.user_home.join(".claude").join("history"),
             self.user_home.join(".claude"),
             self.user_home.join(".claude-code"),
+            self.user_home.join(".config").join("claude").join("projects"),
+            self.user_home.join(".config").join("claude"),
+            self.user_home.join(".config").join("claude-code"),
+            self.user_home.join(".local").join("share").join("claude"),
             self.user_home.join(".teach.claude"),
             self.user_home.join("AppData").join("Roaming").join("Claude"),
             self.user_home.join("AppData").join("Roaming").join("claude-code"),
@@ -141,9 +145,15 @@ impl Scanner {
             self.user_home.join("AppData").join("Local").join("Claude"),
         ];
 
-        if let Ok(val) = std::env::var("CLAUDE_CONFIG_DIR") {
-            if !val.is_empty() {
-                search_dirs.push(PathBuf::from(val));
+        for env_var in &["CLAUDE_CONFIG_DIR", "CLAUDE_HOME", "CLAUDE_PROJECTS_DIR"] {
+            if let Ok(val) = std::env::var(env_var) {
+                if !val.is_empty() {
+                    let p = PathBuf::from(val);
+                    if p.join("projects").exists() {
+                        search_dirs.push(p.join("projects"));
+                    }
+                    search_dirs.push(p);
+                }
             }
         }
 
