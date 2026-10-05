@@ -88,7 +88,7 @@ pub fn run_cli(args: &[String]) -> Result<(), Box<dyn std::error::Error>> {
                     tool_filter = match t.as_str() {
                         "antigravity" | "agy" => Some(ToolType::Antigravity),
                         "claude" | "claude-code" => Some(ToolType::ClaudeCode),
-                        "codex" | "copilot" => Some(ToolType::Codex),
+                        "codex" | "openai-codex" | "openai" => Some(ToolType::Codex),
                         "gemini" | "gemini-cli" => Some(ToolType::GeminiCli),
                         "generic" | "diff" | "other" => Some(ToolType::Generic),
                         _ => None,

@@ -14,7 +14,7 @@ impl ToolType {
         match self {
             ToolType::Antigravity => "Antigravity",
             ToolType::ClaudeCode => "Claude Code",
-            ToolType::Codex => "Codex / Copilot",
+            ToolType::Codex => "OpenAI Codex",
             ToolType::GeminiCli => "Gemini CLI",
             ToolType::Generic => "Other / Diff Log",
         }
@@ -34,7 +34,7 @@ impl ToolType {
         match self {
             ToolType::Antigravity => [79, 140, 255, 255],  // Google Blue
             ToolType::ClaudeCode => [217, 119, 87, 255],   // Anthropic Terracotta
-            ToolType::Codex => [56, 189, 248, 255],       // Cyan / Copilot
+            ToolType::Codex => [56, 189, 248, 255],       // Cyan (OpenAI Codex)
             ToolType::GeminiCli => [168, 85, 247, 255],    // Purple / Gemini
             ToolType::Generic => [156, 163, 175, 255],    // Gray
         }
@@ -58,7 +58,7 @@ impl ToolType {
         match self {
             ToolType::Antigravity => "Google DeepMind's Advanced Agentic Coding CLI & Assistant",
             ToolType::ClaudeCode => "Anthropic's Agentic Terminal Coding & Execution Tool",
-            ToolType::Codex => "GitHub Copilot / Codex CLI Sessions & Workspaces",
+            ToolType::Codex => "OpenAI Codex CLI Sessions & Rollouts",
             ToolType::GeminiCli => "Google Gemini CLI Developer Coding Assistant",
             ToolType::Generic => "Unified Git & Standard Patch Diff Logs",
         }

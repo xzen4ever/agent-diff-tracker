@@ -118,15 +118,25 @@ Khi cập nhật hoặc gỡ lỗi đường dẫn quét, hãy đối chiếu v�
     * **Notebook / Jupyter**: `name` là `"NotebookEdit"`, `"NotebookEditCell"` -> tham số `notebook_path`, `new_source`.
     * **Patch / Unified Diff**: `name` là `"patch"`, `"apply_patch"` hoặc các dòng diff text thuần.
 
-### C. OpenAI Codex (`codex-rs`)
+### C. OpenAI Codex (`codex-rs` / `codex-cli`)
 * **Vị trí lưu trữ**:
   * Thư mục gốc: `$CODEX_HOME` (nếu không đặt, mặc định là `~/.codex`).
   * Cây thư mục rollout lưu theo ngày tháng: `{CODEX_HOME}/sessions/{YYYY}/{MM}/{DD}/rollout-*.jsonl` (cần độ sâu `max_depth >= 6`).
-  * Thư mục lưu trữ cũ: `{CODEX_HOME}/archived_sessions/`.
-  * GitHub Copilot CLI: `~/.copilot/logs/`, `~/.config/github-copilot/`.
-* **Cấu trúc JSONL**:
-  * Từng dòng mang cấu trúc `{"timestamp": "...", "type": "response_item", "payload": { ... }}`.
-  * Thao tác code: `payload.name == "apply_patch"` với `arguments` chứa chuỗi JSON hoặc đối tượng mang trường `patch` hoặc `diff`.
+  * Tên tệp canonical: `rollout-{YYYY}-{MM}-{DD}T{HH}-{mm}-{ss}-{thread_id}.jsonl`.
+  * Thư mục lưu trữ lưu trữ cũ: `{CODEX_HOME}/archived_sessions/`.
+  * Chỉ mục phiên: `{CODEX_HOME}/session_index.jsonl` (ghi nối đuôi các `SessionIndexEntry` gồm `id`, `thread_name`, `updated_at`).
+  * Dự phòng trên các hệ thống: `~/.config/codex/`, `%APPDATA%\codex\`, `%LOCALAPPDATA%\codex\`.
+* **Cấu trúc JSONL & Sự kiện (Events)**:
+  * Khởi tạo phiên: `type == "session_meta"` -> `payload` chứa `session_id`, `id` (thread ID), `cwd` (working directory).
+  * Prompt người dùng: `type == "user_message"` hoặc `type == "response_item"` với `payload.role == "user"` (chứa mảng `content` text).
+  * Thao tác code qua tool call:
+    * `payload.name == "apply_patch"`: `arguments` chứa patch unified diff (dạng JSON string `{"patch": "..."}` hoặc raw patch text).
+  * Thao tác code qua event:
+    * `type == "turn_diff"`: trường `unified_diff` chứa chuỗi unified diff đầy đủ.
+    * `type == "file_change"` (hoặc `PatchApplyUpdated` / `PatchApplyEnd`): `changes` là map `HashMap<PathBuf, FileChange>` gồm:
+      * `FileChange::Add { content }`: Thêm tệp mới.
+      * `FileChange::Delete { content }`: Xóa tệp.
+      * `FileChange::Update { unified_diff, move_path }`: Cập nhật tệp qua unified diff.
 
 ### D. Google Gemini CLI
 * **Vị trí lưu trữ**:

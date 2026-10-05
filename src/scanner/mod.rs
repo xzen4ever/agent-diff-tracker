@@ -42,9 +42,15 @@ impl Scanner {
                     || self.user_home.join("AppData").join("Local").join("claude-code").exists()
             }
             crate::models::ToolType::Codex => {
-                self.user_home.join(".codex").exists()
-                    || self.user_home.join(".copilot").exists()
-                    || self.user_home.join("AppData").join("Local").join("github-copilot").exists()
+                let codex_home = std::env::var("CODEX_HOME")
+                    .ok()
+                    .filter(|v| !v.is_empty())
+                    .map(PathBuf::from)
+                    .unwrap_or_else(|| self.user_home.join(".codex"));
+                codex_home.exists()
+                    || self.user_home.join(".config").join("codex").exists()
+                    || self.user_home.join("AppData").join("Roaming").join("codex").exists()
+                    || self.user_home.join("AppData").join("Local").join("codex").exists()
             }
             crate::models::ToolType::GeminiCli => {
                 self.user_home.join(".gemini").join("gemini-cli").exists()
@@ -178,11 +184,12 @@ impl Scanner {
             codex_home.join("sessions"),
             codex_home.join("archived_sessions"),
             codex_home,
-            self.user_home.join(".copilot"),
-            self.user_home.join(".copilot").join("logs"),
-            self.user_home.join(".config").join("github-copilot"),
-            self.user_home.join("AppData").join("Local").join("github-copilot"),
-            self.user_home.join("AppData").join("Roaming").join("GitHub Copilot"),
+            self.user_home.join(".codex").join("sessions"),
+            self.user_home.join(".codex").join("archived_sessions"),
+            self.user_home.join(".codex"),
+            self.user_home.join(".config").join("codex"),
+            self.user_home.join("AppData").join("Roaming").join("codex"),
+            self.user_home.join("AppData").join("Local").join("codex"),
         ];
 
         for dir in search_dirs {
